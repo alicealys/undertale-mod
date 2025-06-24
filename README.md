@@ -1,3 +1,4 @@
 # undertale-mod
 
-binds wasd to arrow keys
+- Binds **WASD** to **movement**
+- Binds **MOUSE1**/**SPACE** to **interact**
