@@ -21,13 +21,35 @@ namespace patches
 
 		LRESULT __stdcall wnd_proc_stub(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 		{
-			if (msg == WM_KEYDOWN || msg == WM_KEYUP)
+			switch (msg)
+			{
+			case WM_KEYDOWN:
+			case WM_KEYUP:
 			{
 				const auto iter = binds_rev.find(w_param);
 				if (iter != binds_rev.end())
 				{
 					w_param = iter->second;
 				}
+
+				if (w_param == VK_SPACE)
+				{
+					w_param = VK_RETURN;
+				}
+			}
+			break;
+			case WM_LBUTTONDOWN:
+			{
+				msg = WM_KEYDOWN;
+				w_param = VK_RETURN;
+			}
+			break;
+			case WM_LBUTTONUP:
+			{
+				msg = WM_KEYUP;
+				w_param = VK_RETURN;
+			}
+			break;
 			}
 
 			return wnd_proc_hook.invoke_pascal<LRESULT>(hwnd, msg, w_param, l_param);

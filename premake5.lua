@@ -28,6 +28,12 @@ function dependencies.projects()
 	end
 end
 
+newoption {
+	trigger = "copy-to",
+	description = "Optional, copy the EXE to a custom folder after build, define the path here if wanted.",
+	value = "PATH"
+}
+
 dependencies.load()
 
 workspace "undertale-mod"
@@ -71,6 +77,8 @@ workspace "undertale-mod"
 			kind "SharedLib"
 			language "C++"
 
+			targetname "d3d9"
+
 			files 
 			{
 				"./src/**.h",
@@ -94,6 +102,10 @@ workspace "undertale-mod"
 			pchsource "src/stdinc.cpp"
 
 			dependencies.imports()
+
+			if _OPTIONS["copy-to"] then
+				postbuildcommands {"copy /y \"$(TargetPath)\" \"" .. _OPTIONS["copy-to"] .. "\""}
+			end
 
 		group "Dependencies"
 			dependencies.projects()

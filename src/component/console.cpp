@@ -15,6 +15,20 @@ namespace console
 			FILE* handle{};
 			freopen_s(&handle, "CONOUT$", "w", stdout);
 		}
+
+		void print_dev(void* inst, const char* msg, ...)
+		{
+			char buffer[2048];
+
+			va_list ap;
+			va_start(ap, msg);
+
+			vsnprintf_s(buffer, sizeof(buffer), _TRUNCATE, msg, ap);
+
+			va_end(ap);
+
+			printf("%s", buffer);
+		}
 	}
 
 	class component final : public component_interface
@@ -22,8 +36,11 @@ namespace console
 	public:
 		void on_startup() override
 		{
-			//create_console();
-			//ShowWindow(GetConsoleWindow(), SW_SHOW);
+			utils::hook::jump(0x412900, print_dev);
+			utils::hook::set(0x6D9A94, print_dev);
+
+			create_console();
+			ShowWindow(GetConsoleWindow(), SW_SHOW);
 		}
 
 		void on_shutdown() override
