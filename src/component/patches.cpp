@@ -79,6 +79,7 @@ namespace patches
 			add_keybind('A', VK_LEFT);
 			add_keybind('D', VK_RIGHT);
 			add_keybind(VK_SPACE, VK_RETURN);
+			add_keybind(VK_TAB, 'C');
 
 			utils::hook::nop(0x52970C, 6);
 			utils::hook::call(0x52970C, get_async_get_state);
