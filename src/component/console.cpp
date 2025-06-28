@@ -16,7 +16,7 @@ namespace console
 			freopen_s(&handle, "CONOUT$", "w", stdout);
 		}
 
-		void print_dev(void* inst, const char* msg, ...)
+		void print_dev(void* /*inst*/, const char* msg, ...)
 		{
 			char buffer[2048];
 
@@ -36,11 +36,13 @@ namespace console
 	public:
 		void on_startup() override
 		{
+#ifdef DEBUG
 			utils::hook::jump(0x412900, print_dev);
 			utils::hook::set(0x6D9A94, print_dev);
 
 			create_console();
 			ShowWindow(GetConsoleWindow(), SW_SHOW);
+#endif
 		}
 
 		void on_shutdown() override
