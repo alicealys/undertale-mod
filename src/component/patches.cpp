@@ -10,12 +10,6 @@ namespace patches
 	{
 		utils::hook::detour wnd_proc_hook;
 
-		struct key_rebind_t
-		{
-			std::uint32_t native;
-			std::uint32_t custom;
-		};
-
 		std::unordered_map<std::uint32_t, std::uint32_t> binds;		// native to custom
 		std::unordered_map<std::uint32_t, std::uint32_t> binds_rev; // custom to native
 
@@ -30,11 +24,6 @@ namespace patches
 				if (iter != binds_rev.end())
 				{
 					w_param = iter->second;
-				}
-
-				if (w_param == VK_SPACE)
-				{
-					w_param = VK_RETURN;
 				}
 			}
 			break;
@@ -68,7 +57,7 @@ namespace patches
 			return result;
 		}
 
-		void add_keybind(const std::uint32_t native, const std::uint32_t custom)
+		void add_keybind(const std::uint32_t custom, const std::uint32_t native)
 		{
 			binds.insert(std::make_pair(native, custom));
 			binds_rev.insert(std::make_pair(custom, native));
@@ -85,10 +74,11 @@ namespace patches
 
 		void patch()
 		{
-			add_keybind(VK_UP, 'W');
-			add_keybind(VK_DOWN, 'S');
-			add_keybind(VK_LEFT, 'A');
-			add_keybind(VK_RIGHT, 'D');
+			add_keybind('W', VK_UP);
+			add_keybind('S', VK_DOWN);
+			add_keybind('A', VK_LEFT);
+			add_keybind('D', VK_RIGHT);
+			add_keybind(VK_SPACE, VK_RETURN);
 
 			utils::hook::nop(0x52970C, 6);
 			utils::hook::call(0x52970C, get_async_get_state);
